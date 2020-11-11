@@ -1,0 +1,52 @@
+{% extends 'base.html'%}
+
+{%block body%}
+	<h4>Receive Item</h4>
+	<div class="item-detail">
+		<h5>Item Details</h5>
+		<br>
+		<div class="row">
+			<div class="item-label col s12 m3 l2">
+				<span>Item ID :</span>
+			</div>
+			<div class=" col s12 m3">
+				{{obj.item_id}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s12 m3 l2">
+				<span>Item Name :</span>
+			</div>
+			<div class="col s12 m3">
+				{{obj.name}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s12 m3 l2">
+				<span>Brand :</span>
+			</div>
+			<div class=" col s12 m3">
+				{{obj.brand}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s12 m3 l2">
+				<span>In Stock :</span>
+			</div>
+			<div class="col s12 m3">
+				{{obj.stock}}
+			</div>
+		</div>
+		<hr/>
+		<h5>Receive Details</h5>
+		<br>
+		<form class="item-form" method="post">
+		{% include "receive_sale/form.html"%}
+		<button type="submit" class="btn">confirm</button>
+		</form>
+	</div>
+
+{%endblock%}

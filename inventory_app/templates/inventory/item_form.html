@@ -1,0 +1,15 @@
+<form class="item-form" method="post">
+	{% csrf_token %}
+		{%for f in form%}
+		<div class="row">
+			<div class="input-label col s12 m3 l2">
+				<span>{{f.label}} :</span>
+			</div>
+			<div class="input-field col s12 m6">
+				{{f}}
+			</div>
+		</div>
+		{%endfor%}
+	<button type="submit" class="btn">Create</button>
+	<br>
+</form>

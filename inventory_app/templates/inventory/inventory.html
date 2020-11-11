@@ -1,0 +1,95 @@
+{% extends 'base.html'%}
+
+{%block body%}
+	<h4>Inventory</h4>
+
+	<div class="list-header">
+		<div class="create">
+			<a class="waves-effect waves-light btn" href="{%url 'inventory:item_create' %}">Create New Item</a>
+		</div>
+		<div class="right search">
+			<form class="search-form">
+				<div class="row">
+					<div class="input-field col s12 m6">
+						<input placeholder="Search by Item Name" id="name" name="item" type="text" class="validate">
+						<label for="name">Name</label>
+					</div>
+					<div class="input-field col s12 m6">
+						<select id="brand" name="brand">
+							<option value="" disabled>Search by Brands</option>
+							{%for brand in brands%}
+							<option value="{{brand}}">{{brand}}</option>
+							{%endfor%}
+						</select>
+						<label>Brands</label>
+					</div>
+
+					<div class="right">
+						<button class="waves-effect waves-light btn grey" id='clear'>clear</button>
+						<button class="waves-effect waves-light btn" type="submit">search</button>
+					</div>
+				</div>	
+
+			</form>
+		</div>
+	</div>
+	<br/>
+	<div class="list-table">
+	<table class="highlight centered">
+        <thead>
+          <tr><th></th>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Brand</th>
+              <th>Category</th>
+			  <th>Lifetime</th>
+			  <th>Description</th>
+			  <th>PktSize</th>
+			  <th>TotalReceive</th>
+			  <th>TotalSale</th>
+			  <th>Instock(Pcs)</th>
+			  <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in object_list %}
+	          <tr>
+	          	<td>{{item.need_remind}}</td>
+	            <td>{{item.item_id}}</td>
+	            <td>{{item.name}}</td>
+	            <td>{{item.brand}}</td>
+	            <td>{{item.item_type}}</td>
+	            <td>{{item.lifetime}}</td>
+	            <td style="word-break: break-all;">{{item.description}}</td>
+	            <td>{{item.pktsize}}</td>
+	            <td>{{item.total_receive}}</td>
+	            <td>{{item.total_sale}}</td>
+	            <td>{{item.stock}}</td>
+	            <td>
+	            	<ul>
+	            		<li><a href="{%url 'inventory:item_udpate' item.id %}">Update</a></li>
+	            		<li><a href="{%url 'inventory:receive' item.id %}">Receive</a></li>
+	            		<li><a href="{%url 'inventory:sale' item.id %}">Sale</a></li>
+	            	</ul>
+	            </td>
+	          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+	</div>
+
+
+      <script type="text/javascript">
+      	$(document).ready(function(){
+      		$('#name').val("{{request.GET.item}}")
+      		$('#brand').val("{{request.GET.brand}}")
+      		$('select').formSelect();
+      		$('button#clear').on('click', function(){
+      			$('#name').val("");
+      			$('#brand').val("");
+      		})
+      	});
+      </script>
+
+{%endblock%}

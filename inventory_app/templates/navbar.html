@@ -1,0 +1,23 @@
+<nav>
+	<div class="nav-wrapper">
+		<a href="#" class="brand-logo center"><img class="nav-logo" src="/media/logo.png" alt="Logo"/></a>
+		<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+		<ul id="nav-mobile" class="hide-on-med-and-down">
+			<li><a href="{%url 'inventory:item_list' %}">Inventory</a></li>
+			<li><a href="{%url 'inventory:receive_list' %}">Receive List</a></li>
+			<li><a href="{%url 'inventory:sale_list' %}">Sale List</a></li>
+		</ul>
+	</div>
+</nav>
+
+<ul class="sidenav" id="mobile-demo">
+	<li><a href="{%url 'inventory:item_list' %}">Inventory</a></li>
+	<li><a href="{%url 'inventory:receive_list' %}">Receive List</a></li>
+	<li><a href="{%url 'inventory:sale_list' %}">Sale List</a></li>
+</ul>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.sidenav').sidenav();
+	});
+</script>

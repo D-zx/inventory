@@ -1,0 +1,37 @@
+{% extends 'base.html'%}
+
+{%block body%}
+	<table>
+        <thead>
+          <tr>
+              <th>Item_id</th>
+              <th>Item Name</th>
+              <th>Brand</th>
+              <th>type </th>
+			  <th>description</th>
+			  <th>size </th>
+			  <th>lifetime</th>
+			  <th>stock</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for item in object_list %}
+	          <tr>
+	            <td>{{item.item_id}}</td>
+	            <td>{{item.name}}</td>
+	            <td>{{item.brand}}</td>
+	            <td>{{item.itype}}</td>
+	            <td>{{item.description}}</td>
+	            <td>{{item.size}}</td>
+	            <td>{{item.lifetime}}</td>
+	            <td>{{item.inventory.stock}}</td>
+	            <td><a href="{%url 'inventory:item_udpate' item.id %}">update</a></td>
+	            <td><a href="{%url 'inventory:receive' item.id %}">receive</a></td>
+	            <td><a href="{%url 'inventory:sale' item.id %}">sale</a></td>
+	          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+{%endblock%}

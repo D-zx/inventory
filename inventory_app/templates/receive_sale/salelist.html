@@ -1,0 +1,88 @@
+{% extends 'base.html'%}
+
+{%block body%}
+  <h4>Sale List</h4>
+
+  <div class="list-header">
+    <!-- <div class="create">
+      <a class="waves-effect waves-light btn" href="{%url 'inventory:item_create' %}">Create New Item</a>
+    </div> -->
+    <div class="right">
+      <form class="search-form">
+        <div class="row">
+          <div class="input-field col s12 m4">
+            <input placeholder="Search by name" id="name" name="item" type="text" class="validate">
+            <label for="name">Name</label>
+          </div>
+          <div class="input-field col s12 m4">
+            <select id="brand" name="brand">
+              <option value="" disabled>Search by Brands</option>
+              {%for brand in brands%}
+              <option value="{{brand}}">{{brand}}</option>
+              {%endfor%}
+            </select>
+            <label>Brands</label>
+          </div>
+          <div class="input-field col s12 m4">
+            <input placeholder="Search by Date" id="date" name="date" type="date" class="validate">
+            <label for="name">Date</label>
+          </div>
+          <div class="right">
+            <button class="waves-effect waves-light btn grey" id='clear'>clear</button>
+            <button class="waves-effect waves-light btn" type="submit">search</button>
+          </div>
+        </div>  
+      </form>
+    </div>
+  </div>
+  <br/>
+  <div class="list-table">
+    <table class="highlight centered">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Brand</th>
+          <th>Type</th>
+          <th>Qty</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for obj in object_list %}
+        <tr>
+          <td>{{obj.item.item_id}}</td>
+          <td>{{obj.item.name}}</td>
+          <td>{{obj.item.brand}}</td>
+          <td>{{obj.item.item_type}}</td>
+          <td>{{obj.quantity}}</td>
+          <td>{{obj.date}}</td>
+          <td>
+            <ul>
+              <li><a href="{%url 'inventory:sale_update' obj.id %}">Edit</a></li>
+            </ul>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#name').val("{{request.GET.item}}")
+      $('#date').val("{{request.GET.date}}")
+      $('#brand').val("{{request.GET.brand}}")
+      $('select').formSelect();
+      $('button#clear').on('click', function(){
+        $('#name').val("");
+        $('#brand').val("");
+      })
+    });
+  </script>
+
+{%endblock%}

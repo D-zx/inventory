@@ -6,7 +6,7 @@ from .models import Item, Inventory, InventoryUpdate
 class ItemForm(forms.ModelForm):
 	class Meta:
 		model = Item
-		fields = ('item_id','name','brand','item_type','description','lifetime','pktsize','rmd_amount')
+		fields = ('item_id','name','brand','item_type','lifetime','pktsize','rmd_amount','description')
 		exclude = ('stock',)
 		labels = {
 		'item_id': _('Item ID'),

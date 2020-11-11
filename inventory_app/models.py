@@ -8,13 +8,13 @@ from datetime import datetime
 
 
 class Item(models.Model):
-	item_id = models.CharField(max_length=100, blank=True)
-	name = models.CharField(max_length=100, blank=True)
-	brand = models.CharField(max_length=100, blank=True)
-	item_type = models.CharField(max_length=100, blank=True)
-	description = models.CharField(max_length=200, blank=True)
+	item_id = models.CharField(max_length=100)
+	name = models.CharField(max_length=100)
+	brand = models.CharField(max_length=100)
+	item_type = models.CharField(max_length=100)
+	description = models.CharField(max_length=200)
 	pktsize = models.IntegerField(default=1)
-	lifetime = models.CharField(max_length=100, blank=True)
+	lifetime = models.CharField(max_length=100)
 	rmd_amount = models.IntegerField(default=0)
 	stock = models.IntegerField(default=0)
 	total_receive = models.IntegerField(default=0)

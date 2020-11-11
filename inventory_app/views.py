@@ -9,6 +9,12 @@ from django.contrib import messages
 
 # Create your views here.
 
+class  Home(TemplateView):
+	template_name = 'home/index.html'
+
+	def get(self, request):
+		return redirect('inventory:item_list')
+
 class CreateItem(CreateView):
 	model=Item
 	form_class= ItemForm

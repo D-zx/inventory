@@ -1,12 +1,15 @@
 from django.conf.urls import url
 from django.urls import path, include
-from .views import CreateItem, UpdateItem, DeleteItem, ItemList, ItemDetail, Receive, Sale, ReceiveList, SaleList, ReceiveUpdate, SaleUpdate
+from .views import (CreateItem, UpdateItem, DeleteItem, ItemList, ItemDetail, 
+                    Receive, Sale, ReceiveList, SaleList, ReceiveUpdate, SaleUpdate, 
+                    Home)
 
 
 app_name = 'inventory_app'
 
 
 urlpatterns = [
+    path('', Home.as_view(), name='home'),
     path('item/create', CreateItem.as_view(), name='item_create'),
     path('item/<pk>/update', UpdateItem.as_view(), name='item_udpate'),
     path('item/<pk>/delete', DeleteItem.as_view(), name='item_delete'),

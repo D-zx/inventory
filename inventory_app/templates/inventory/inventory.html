@@ -45,8 +45,8 @@
 			  <th>Lifetime</th>
 			  <th>Description</th>
 			  <th>PktSize</th>
-			  <th>TotalReceive</th>
-			  <th>TotalSale</th>
+			  <th>Total Receive</th>
+			  <th>Total Sale</th>
 			  <th>Instock(Pcs)</th>
 			  <th></th>
           </tr>
@@ -59,7 +59,7 @@
 	            <td>{{item.item_id}}</td>
 	            <td>{{item.name}}</td>
 	            <td>{{item.brand}}</td>
-	            <td>{{item.item_type}}</td>
+	            <td>{{item.category}}</td>
 	            <td>{{item.lifetime}}</td>
 	            <td style="word-break: break-all;">{{item.description}}</td>
 	            <td>{{item.pktsize}}</td>
@@ -68,7 +68,9 @@
 	            <td>{{item.stock}}</td>
 	            <td>
 	            	<ul>
-	            		<li><a href="{%url 'inventory:item_udpate' item.id %}">Update</a></li>
+	            		<li><a href="{%url 'inventory:item_detail' item.id %}">Detail</a></li>
+	            		<li><a href="{%url 'inventory:item_udpate' item.id %}">Edit</a></li>
+	            		<li><a class='delete modal-trigger' data-url="{% url 'inventory:item_delete' item.id %}" href="#modal1">Delete</a></li>
 	            		<li><a href="{%url 'inventory:receive' item.id %}">Receive</a></li>
 	            		<li><a href="{%url 'inventory:sale' item.id %}">Sale</a></li>
 	            	</ul>
@@ -78,6 +80,7 @@
         </tbody>
       </table>
 	</div>
+  	{% include "delete_confirm.html"%}
 
 
       <script type="text/javascript">

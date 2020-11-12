@@ -25,6 +25,12 @@
 <body>
     {% include "navbar.html"%}
     <div class="content container">
+      {% if messages %}
+      {% for message in messages %}
+      <span class="error-message">{{message}}</span>
+      {% endfor %}
+      {% endif %}
+      
       {%block body%}
       {%endblock%}
     </div>

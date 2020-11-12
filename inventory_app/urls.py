@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path, include
 from .views import (CreateItem, UpdateItem, DeleteItem, ItemList, ItemDetail, 
-                    Receive, Sale, ReceiveList, SaleList, ReceiveUpdate, SaleUpdate, 
+                    Receive, Sale, ProcessList, ProcessUpdate, ProcessDelete,
                     Home)
 
 
@@ -16,10 +16,12 @@ urlpatterns = [
     path('items/', ItemList.as_view(), name='item_list'),
     path('item/<pk>/', ItemDetail.as_view(), name='item_detail'),
     path('receive/<pk>/', Receive.as_view(), name='receive'),
-    path('receive_update/<pk>/', ReceiveUpdate.as_view(), name='receive_update'),
-    path('receivelist/', ReceiveList.as_view(), name='receive_list'),
+    path('receivelist/', ProcessList.as_view(process='receive', template_name='receive_sale/receive_list.html'), name='receive_list'),
+    path('receive_update/<pk>/', ProcessUpdate.as_view(template_name='receive_sale/receive.html'), name='receive_update'),
     path('sale/<pk>/', Sale.as_view(), name='sale'),
-    path('salelist/', SaleList.as_view(), name='sale_list'),
-    path('sale_update/<pk>/', SaleUpdate.as_view(), name='sale_update'),
+    path('salelist/', ProcessList.as_view(process='sale', template_name='receive_sale/sale_list.html'), name='sale_list'),
+    path('sale_update/<pk>/', ProcessUpdate.as_view(template_name='receive_sale/sale.html'), name='sale_update'),
+    path('process_delete/<pk>/', ProcessDelete.as_view(), name='process_delete'),
+
 ]
 

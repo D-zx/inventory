@@ -1,11 +1,197 @@
 {% extends 'base.html'%}
+{% load inventory_tag %}
 
 {%block body%}
-<h4>Update Item</h4>
-<form method="post">
-	{% csrf_token %}
-	{{form.as_p}}
-	<button type="submit" class="btn">Update</button>
-	<br>
-</form>
+	<div class="item-detail">
+		<h4>Item Details</h4>
+		<div class="right">
+			<a class='dropdown-trigger btn' href='#' data-target='dropdown1'><i class="material-icons">arrow_drop_down</i></a>
+
+			<ul id='dropdown1' class='dropdown-content'>
+				<li><a href="{%url 'inventory:item_udpate' item.id %}">Edit</a></li>
+        		<li><a class='delete modal-trigger' data-url="{% url 'inventory:item_delete' item.id %}" href="#modal1">Delete</a></li>
+        		<li><a href="{%url 'inventory:receive' item.id %}">Receive</a></li>
+        		<li><a href="{%url 'inventory:sale' item.id %}">Sale</a></li>
+			</ul>
+		</div>
+		<br>
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Item ID :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.item_id}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Item Name :</span>
+			</div>
+			<div class="col s6 m3">
+				{{object.name}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Brand :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.brand}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Category :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.category}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Lifetime :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.lifetime}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Description :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.description}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Remainder limit:</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.rmd_amount}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Packet Size :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.pktsize}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Total Receive :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.total_receive}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>Total Sale :</span>
+			</div>
+			<div class=" col s6 m3">
+				{{object.total_sale}}
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="item-label col s5 m3 l2">
+				<span>In Stock :</span>
+			</div>
+			<div class="col s6 m3">
+				{{object.stock}}
+			</div>
+		</div>
+		<br>
+	</div>
+	<hr>
+	<div class="process_list">
+		<h5>Inventory Update list</h5>
+		<div class="right">
+			<form class="search-form">
+				<div class="row">
+					<div class="input-field col s12 m4">
+						<select id="process" name="process">
+							<option value="" disabled>Receive/Sale</option>
+							<option value="receive">Receive</option>
+							<option value="sale">Sale</option>
+						</select>
+						<label>Brands</label>
+					</div>
+					<div class="input-field col s6 m4">
+						<input placeholder="Search by Date" id="start_date" name="start_date" type="date" class="validate">
+						<label for="name">Start Date</label>
+					</div>
+					<div class="input-field col s6 m4">
+						<input placeholder="Search by Date" id="end_date" name="end_date" type="date" class="validate">
+						<label for="name">End Date</label>
+					</div>
+					<div class="right">
+						<button class="waves-effect waves-light btn grey" id='clear'>clear</button>
+						<button class="waves-effect waves-light btn" type="submit">search</button>
+					</div>
+				</div>  
+			</form>
+		</div>
+		<div class="list-table">
+			<table class="highlight centered">
+				<thead>
+					<tr>
+						<th>No.</th>
+						<th>Receive/Sale</th>
+						<th>Qty</th>
+						<th>Date</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{% for obj in process_list %}
+					<tr>
+						<td>{{forloop.counter}}</td>
+						<td>{{obj.process|title}}</td>
+						<td>{{obj.quantity}}</td>
+						<td>{{obj.date}}</td>
+						<td>
+							<ul>
+								<li>{{obj.process|process_edit:obj.id}}</li>
+								<li><a class='delete modal-trigger' data-url="{% url 'inventory:process_delete' obj.id %}" href="#modal1">Delete</a></li>
+							</ul>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	{% include "delete_confirm.html"%}
+
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+				$('#process').val("{{request.GET.process}}")
+		      	$('#start_date').val("{{request.GET.start_date}}")
+		      	$('#end_date').val("{{request.GET.end_date}}")
+				$('select').formSelect();
+				$('.dropdown-trigger').dropdown();
+				$('button#clear').on('click', function(){
+					$('#process').val("");
+					$('#start_date').val("");
+					$('#end_date').val("");
+				})
+			});
+	</script>
+
 {%endblock%}

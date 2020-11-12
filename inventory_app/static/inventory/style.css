@@ -19,7 +19,7 @@ table td, th{
 	overflow-x: auto;
 }
 
-h4{
+h4, h5{
 	font-weight: bold;
 	color: #295A85;
 }
@@ -59,4 +59,19 @@ nav {
 
 nav, nav .nav-wrapper i, nav a.sidenav-trigger, nav a.sidenav-trigger i{
 	line-height: 70px;
+}
+
+.errors {
+	color: red;
+	font-size: 80%;
+	font-style: italic;
+	top: -15px;
+	position: relative;
+}
+
+.modal {
+	width: 270px;
+	text-align: center;
+	background: #ff8a80;
+	color: white;
 }

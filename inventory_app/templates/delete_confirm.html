@@ -1,0 +1,19 @@
+<div id="modal1" class="modal">
+	<div class="modal-content">
+		<h5>Are you sure to delete?</h5>
+	</div>
+	<div class="modal-footer">
+		<a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
+		<a id='delete' href="#!" class="modal-close waves-effect waves-green btn-flat">Yes</a>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.modal').modal();
+		$('a.delete').on('click', function(){
+			var url = $(this).attr('data-url')
+			$('#delete').attr("href", url)
+		})
+	});
+</script>

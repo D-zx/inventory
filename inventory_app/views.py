@@ -6,6 +6,9 @@ from .models import Item, Inventory, InventoryUpdate
 from .forms import ItemForm, InventoryUpdateForm
 
 from django.contrib import messages
+from django.urls import path, reverse, reverse_lazy
+from datetime import datetime
+
 
 # Create your views here.
 
@@ -28,10 +31,30 @@ class UpdateItem(UpdateView):
 
 class DeleteItem(DeleteView):
 	model=Item
+	success_url = reverse_lazy('inventory_app:home')
+
+	def get(self, request, *args, **kwargs):
+		return self.post(request, *args, **kwargs)
 
 class ItemDetail(DetailView):
 	model=Item
 	template_name='inventory/item_detail.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		process = self.request.GET.get('process') or ''
+		start = self.request.GET.get('start_date') or datetime.today()
+		end = self.request.GET.get('end_date') or datetime.today()
+		search= {}
+		if process:
+			search['process__iexact'] = process
+		if start:
+			search['date__range'] = [start, end]
+		query = context['object'].inventoryupdate_set.all()
+		query = query.filter(**search).order_by('id')
+		context['process_list'] = query
+
+		return context
 
 class ItemList(ListView):
 	model=Item
@@ -48,7 +71,7 @@ class ItemList(ListView):
 		name = self.request.GET.get('item') or ''
 		if brand:
 			search['brand__iexact'] = brand
-		search['name__contains'] = name
+		search['name__icontains'] = name
 		queryset = super(ItemList, self).get_queryset()
 		queryset = queryset.filter(**search).order_by('id')
 		return queryset
@@ -64,54 +87,18 @@ class Receive(CreateView):
 		return context
 
 	def post(self, request, *args, **kwargs):
+		self.object = None
 		form = self.get_form()
 		obj = Item.objects.get(pk=kwargs['pk'])
 		if form.is_valid():
 			form = form.save(commit=False)
 			form.item = obj
 			form.process = 'receive'
-			obj.stock += form.quantity
 			form.save()
-			obj.save()
-			return redirect('inventory:receive_list')
-
-class ReceiveUpdate(UpdateView):
-	model=InventoryUpdate
-	form_class= InventoryUpdateForm
-	template_name='receive_sale/receive.html'
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		print(context)
-		context['obj'] = InventoryUpdate.objects.get(pk=self.kwargs['pk']).item
-		return context
-
-	def form_valid(self, form):
-		form.save()
-		obj = InventoryUpdate.objects.get(pk=self.kwargs['pk']).item
-		obj.update_stock()
-		return super().form_valid(form)
-
-		
-
-class ReceiveList(ListView):
-	model=InventoryUpdate
-	template_name='receive_sale/receivelist.html'
-
-	def get_queryset(self):
-		search={}
-		brand = self.request.GET.get('brand') or ''
-		name = self.request.GET.get('item') or ''
-		date = self.request.GET.get('date') or ''
-		search['process__iexact'] = "receive"
-		search['item__name__contains'] = name
-		if brand:
-			search['item__brand__iexact'] = brand
-		if date:
-			search['date'] = date
-		queryset = super(ListView, self).get_queryset()
-		queryset = queryset.filter(**search).order_by('id')
-		return queryset
-
+			obj.update_stock()
+			return redirect(reverse('inventory:item_detail', kwargs={'pk': obj.id}))
+		else:
+			return self.form_invalid(form)
 
 
 class Sale(CreateView):
@@ -125,6 +112,7 @@ class Sale(CreateView):
 		return context
 
 	def post(self, request, *args, **kwargs):
+		self.object = None
 		form = self.get_form()
 		obj = Item.objects.get(pk=kwargs['pk'])
 		if form.is_valid():
@@ -139,42 +127,69 @@ class Sale(CreateView):
 				return self.render_to_response(self.get_context_data(form=form))
 			else:
 				form1.save()
-				obj.save()
-				return redirect('inventory:sale_list')
+				obj.update_stock()
+				return redirect(reverse('inventory:item_detail', kwargs={'pk': obj.id}))
+		else:
+			return self.form_invalid(form)
 			
 
-class SaleList(ListView):
+class ProcessList(ListView):
 	model=InventoryUpdate
-	template_name='receive_sale/salelist.html'
+	template_name='receive_sale/receive_list.html'
+	process = 'receive'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['brands'] = Item.objects.values_list('brand', flat=True).distinct()
+		return context
 
 	def get_queryset(self):
 		search={}
 		brand = self.request.GET.get('brand') or ''
 		name = self.request.GET.get('item') or ''
-		date = self.request.GET.get('date') or ''
-		search['process__iexact'] = "sale"
+		start = self.request.GET.get('start_date') or datetime.today()
+		end = self.request.GET.get('end_date') or datetime.today()
+		search['process__iexact'] = self.process
 		search['item__name__contains'] = name
 		if brand:
 			search['item__brand__iexact'] = brand
-		if date:
-			search['date'] = date
+		if start:
+			search['date__range'] = [start, end]
 		queryset = super(ListView, self).get_queryset()
 		queryset = queryset.filter(**search).order_by('id')
 		return queryset
 		
 
-class SaleUpdate(UpdateView):
+class ProcessUpdate(UpdateView):
 	model=InventoryUpdate
 	form_class= InventoryUpdateForm
 	template_name='receive_sale/sale.html'
+
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		print(context)
 		context['obj'] = InventoryUpdate.objects.get(pk=self.kwargs['pk']).item
 		return context
+
 
 	def form_valid(self, form):
 		form.save()
 		obj = InventoryUpdate.objects.get(pk=self.kwargs['pk']).item
 		obj.update_stock()
 		return super().form_valid(form)
+
+class ProcessDelete(DeleteView):
+	model = InventoryUpdate
+	success_url = reverse_lazy('inventory:receive_list')
+
+	def get(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		item = self.object.item
+		success_url = self.object.get_absolute_url()
+		after = item.stock - self.object.quantity
+		if after < 0:
+			messages.add_message(self.request,messages.WARNING,"You cannot delete.")
+			return redirect(success_url)
+		else:
+			self.object.delete()
+			item.update_stock()
+			return redirect(success_url)

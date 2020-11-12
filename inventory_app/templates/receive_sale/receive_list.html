@@ -10,11 +10,11 @@
     <div class="right">
       <form class="search-form">
         <div class="row">
-          <div class="input-field col s12 m4">
+          <div class="input-field col s12 m3">
             <input placeholder="Search by name" id="name" name="item" type="text" class="validate">
             <label for="name">Item Name</label>
           </div>
-          <div class="input-field col s12 m4">
+          <div class="input-field col s12 m3">
             <select id="brand" name="brand">
               <option value="" disabled>Search by Brands</option>
               {%for brand in brands%}
@@ -23,11 +23,14 @@
             </select>
             <label>Brands</label>
           </div>
-          <div class="input-field col s12 m4">
-            <input placeholder="Search by Date" id="date" name="date" type="date" class="validate">
-            <label for="name">Date</label>
+          <div class="input-field col s6 m3">
+            <input placeholder="Search by Date" id="start_date" name="start_date" type="date" class="validate">
+            <label for="name">Start Date</label>
           </div>
-
+          <div class="input-field col s6 m3">
+            <input placeholder="Search by Date" id="end_date" name="end_date" type="date" class="validate">
+            <label for="name">End Date</label>
+          </div>
           <div class="right">
             <button class="waves-effect waves-light btn grey" id='clear'>clear</button>
             <button class="waves-effect waves-light btn" type="submit">search</button>
@@ -57,12 +60,13 @@
           <td>{{obj.item.item_id}}</td>
           <td>{{obj.item.name}}</td>
           <td>{{obj.item.brand}}</td>
-          <td>{{obj.item.item_type}}</td>
+          <td>{{obj.item.category}}</td>
           <td>{{obj.quantity}}</td>
           <td>{{obj.date}}</td>
           <td>
             <ul>
               <li><a href="{%url 'inventory:receive_update' obj.id %}">Edit</a></li>
+              <li><a class='delete modal-trigger' data-url="{% url 'inventory:process_delete' obj.id %}" href="#modal1">Delete</a></li>
             </ul>
           </td>
         </tr>
@@ -70,17 +74,23 @@
       </tbody>
     </table>
   </div>
+  {% include "delete_confirm.html"%}
+
+  
 
 
   <script type="text/javascript">
     $(document).ready(function(){
       $('#name').val("{{request.GET.item}}")
-      $('#date').val("{{request.GET.date}}")
+      $('#start_date').val("{{request.GET.start_date}}")
+      $('#end_date').val("{{request.GET.end_date}}")
       $('#brand').val("{{request.GET.brand}}")
       $('select').formSelect();
       $('button#clear').on('click', function(){
         $('#name').val("");
         $('#brand').val("");
+        $('#start_date').val("");
+        $('#end_date').val("");
       })
     });
   </script>

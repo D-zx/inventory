@@ -7,6 +7,14 @@
 			<li><a href="{%url 'inventory:receive_list' %}">Receive List</a></li>
 			<li><a href="{%url 'inventory:sale_list' %}">Sale List</a></li>
 		</ul>
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			{% if request.user.is_authenticated %}
+				<li><a href="{%url 'accounts:change-password' %}">Change Password</a></li>
+				<li><a href="{%url 'accounts:logout' %}">Log-Out</a></li>
+			{%else%}
+				<li><a href="{%url 'accounts:login' %}">Log-In</a></li>
+			{%endif%}
+		</ul>
 	</div>
 </nav>
 
@@ -14,6 +22,12 @@
 	<li><a href="{%url 'inventory:item_list' %}">Inventory</a></li>
 	<li><a href="{%url 'inventory:receive_list' %}">Receive List</a></li>
 	<li><a href="{%url 'inventory:sale_list' %}">Sale List</a></li>
+	{% if request.user.is_authenticated %}
+	<li><a href="{%url 'accounts:change-password' %}">Change Password</a></li>
+	<li><a href="{%url 'accounts:logout' %}">Log-Out</a></li>
+	{%else%}
+	<li><a href="{%url 'accounts:login' %}">Log-In</a></li>
+	{%endif%}
 </ul>
 
 <script type="text/javascript">

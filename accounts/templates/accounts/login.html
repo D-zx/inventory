@@ -1,0 +1,27 @@
+{% extends '../base.html'%}
+
+{% block head%}
+  <title>Log-In</title>
+{%endblock%}
+
+{%block body%}
+<div class="login">
+	<div class="card">
+		<form class="login-form" method="post">
+			{% csrf_token %}
+			<div class="card-content white-text">
+				<h5 class="center">Log-In</h5>
+				{{form}}
+	        </div>
+        <div class="card-action">
+          <a href="#" id='login-btn'>LogIn</a>
+        </div>
+		</form>
+      </div>
+</div>
+<script type="text/javascript">
+	$('#login-btn').on('click', function(){
+		$('.login-form').submit()
+	});
+</script>
+{%endblock%}

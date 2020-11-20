@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ["https://kokoroinventory.herokuapp.com", 'localhost']
 
 INSTALLED_APPS = [
     'inventory_app',
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'Inventory.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djangotest',
+        'NAME': 'inventory',
         'USER': 'djangotest',
         'PASSWORD': '123456789',
         'HOST': 'localhost',
@@ -136,3 +137,5 @@ django_heroku.settings(locals())
 import dj_database_url 
 prod_db  =  dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
+
+LOGIN_REDIRECT_URL= '/'

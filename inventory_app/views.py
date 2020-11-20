@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import (	TemplateView, ListView, DetailView,FormView,
                                     CreateView, UpdateView, DeleteView, RedirectView)
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 
 from .models import Item, Inventory, InventoryUpdate
 from .forms import ItemForm, InventoryUpdateForm
@@ -12,31 +13,36 @@ from datetime import datetime
 
 # Create your views here.
 
-class  Home(TemplateView):
+class  Home(LoginRequiredMixin,TemplateView):
+	login_url = '/account/login'
 	template_name = 'home/index.html'
 
 	def get(self, request):
 		return redirect('inventory:item_list')
 
-class CreateItem(CreateView):
+class CreateItem(LoginRequiredMixin, CreateView):
+	login_url = '/account/login'
 	model=Item
 	form_class= ItemForm
 	template_name='inventory/item_create.html'
 
 
-class UpdateItem(UpdateView):
+class UpdateItem(LoginRequiredMixin, UpdateView):
+	login_url = '/account/login'
 	model=Item
 	form_class= ItemForm
 	template_name='inventory/item_update.html'
 
-class DeleteItem(DeleteView):
+class DeleteItem(LoginRequiredMixin, DeleteView):
+	login_url = '/account/login'
 	model=Item
 	success_url = reverse_lazy('inventory_app:home')
 
 	def get(self, request, *args, **kwargs):
 		return self.post(request, *args, **kwargs)
 
-class ItemDetail(DetailView):
+class ItemDetail(LoginRequiredMixin, DetailView):
+	login_url = '/account/login'
 	model=Item
 	template_name='inventory/item_detail.html'
 
@@ -56,7 +62,8 @@ class ItemDetail(DetailView):
 
 		return context
 
-class ItemList(ListView):
+class ItemList(LoginRequiredMixin, ListView):
+	login_url = '/account/login'
 	model=Item
 	template_name='inventory/inventory.html'
 
@@ -77,7 +84,8 @@ class ItemList(ListView):
 		return queryset
 
 
-class Receive(CreateView):
+class Receive(LoginRequiredMixin, CreateView):
+	login_url = '/account/login'
 	model=InventoryUpdate
 	form_class= InventoryUpdateForm
 	template_name='receive_sale/receive.html'
@@ -101,7 +109,8 @@ class Receive(CreateView):
 			return self.form_invalid(form)
 
 
-class Sale(CreateView):
+class Sale(LoginRequiredMixin, CreateView):
+	login_url = '/account/login'
 	model=InventoryUpdate
 	form_class= InventoryUpdateForm
 	template_name='receive_sale/sale.html'
@@ -133,7 +142,8 @@ class Sale(CreateView):
 			return self.form_invalid(form)
 			
 
-class ProcessList(ListView):
+class ProcessList(LoginRequiredMixin, ListView):
+	login_url = '/account/login'
 	model=InventoryUpdate
 	template_name='receive_sale/receive_list.html'
 	process = 'receive'
@@ -160,7 +170,8 @@ class ProcessList(ListView):
 		return queryset
 		
 
-class ProcessUpdate(UpdateView):
+class ProcessUpdate(LoginRequiredMixin, UpdateView):
+	login_url = '/account/login'
 	model=InventoryUpdate
 	form_class= InventoryUpdateForm
 	template_name='receive_sale/sale.html'
@@ -177,7 +188,8 @@ class ProcessUpdate(UpdateView):
 		obj.update_stock()
 		return super().form_valid(form)
 
-class ProcessDelete(DeleteView):
+class ProcessDelete(LoginRequiredMixin, DeleteView):
+	login_url = '/account/login'
 	model = InventoryUpdate
 	success_url = reverse_lazy('inventory:receive_list')
 

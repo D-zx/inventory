@@ -75,3 +75,15 @@ nav, nav .nav-wrapper i, nav a.sidenav-trigger, nav a.sidenav-trigger i{
 	background: #ff8a80;
 	color: white;
 }
+
+.login .card {
+	width: 375px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.login li {
+	color: red;
+	opacity: 0.5;
+	font-size: 80%;
+}
